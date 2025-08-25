@@ -1,0 +1,103 @@
+body {
+	.--fullpage-init & {
+		// Щоб вимкнути оновлення сторінки свайпом на телефоні
+		overflow: hidden;
+		touch-action: none;
+		overscroll-behavior: none;
+	}
+}
+
+// Оболонка секцій
+[data-fls-fullpage] {
+	min-height: 100svh;
+	.--fullpage-init & {
+		z-index: 1;
+		touch-action: none;
+		position: relative;
+		overflow: hidden;
+	}
+}
+
+// Секція
+[data-fls-fullpage-section] {
+	.--fullpage-switching & {
+		touch-action: none;
+	}
+	.--fullpage-init & {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+	}
+
+	// Модифікації
+	.--fullpage-init .slider-mode &,
+	.--fullpage-init .cards-mode & {
+		transition: transform 0.7s cubic-bezier(0.55, 0.085, 0, 0.99) 0s;
+	}
+	.--fullpage-init .fade-mode & {
+		transition:
+			opacity 0.5s ease-in-out 0s,
+			visibility 0.5s ease-in-out 0s;
+	}
+}
+
+// Оболонка буллетів
+.--fullpage-bullets {
+	position: fixed;
+	top: 50%;
+	transform: translate(0, -50%);
+	right: 40px;
+	max-height: 100%;
+
+	display: flex;
+	flex-direction: column;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	
+	z-index: 2;
+	gap: 10px;
+	@media (max-width: toEm($pc)) {
+		right: 20px;
+	}
+	@media (max-width: toEm($mobileSmall)) {
+		top: auto;
+		bottom: 20px;
+		transform: translate(50%, 0);
+		flex-direction: row;
+		right: 50%;
+	}
+
+	// Булет
+	& .--fullpage-bullet {
+		cursor: pointer;
+		width: 15px;
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background-color: var(--primary);
+		box-shadow:
+			toRem(0) toRem(0) toRem(3) var(--white),
+			0 0 toRem(30) rgba(255, 255, 255, 0.8);
+		transition:
+			transform 0.4s ease 0s, background-color 0.4s ease 0s;
+
+		@media (min-width:toEm($mobileSmall)){
+			 width: 15px; 
+		}
+		@media (any-hover: hover) {
+			&:hover {
+				opacity: 1;
+			}
+		}
+	}
+
+	& .--fullpage-bullet-active {
+		background-color:var(--pink);
+		transform: scale(1.3);
+	}
+}

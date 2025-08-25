@@ -1,0 +1,30 @@
+{
+  "statistics": {
+    "sessions": [
+      {
+        "date": "25.08.2025",
+        "start": 1756115344315,
+        "end": 1756126224527,
+        "type": "build"
+      },
+      {
+        "date": "25.08.2025",
+        "start": 1756126447472,
+        "end": 1756135433279,
+        "type": "build"
+      }
+    ],
+    "files": [
+      "index.html",
+      "main.html",
+      "home.html",
+      "style.scss",
+      "settings.scss",
+      "variables.css",
+      "home.scss",
+      "fullpage.scss",
+      "extends.scss",
+      "bg-main.jpg"
+    ]
+  }
+}
