@@ -1,3 +1,9 @@
+section {
+  [data-fls-loaded] & {
+    visibility: visible !important;
+  }
+}
+
 .logo {
   position: fixed;
   z-index: 10;
@@ -176,6 +182,153 @@
 }
 
 
+.chips {
+  position: absolute;
+  z-index: 10;
+  left: 45%;
+  bottom: 3%;
+
+  @media (max-width: toEm(820.98)){
+      display: none;
+  }
+
+   @media (any-hover: hover) {
+      &:hover {
+        .chips__btn {
+          animation-play-state: paused;
+
+        }
+        scale: 1.2;
+        transition: scale .2s ease 0s;
+      }
+    }
+
+
+  // .chips__btn
+  &__btn {
+    outline: none;
+    opacity: 0;
+    scale: 0;
+
+    aspect-ratio: 347/214;
+
+    @media (min-width:toEm(1440.98)) {
+      font-size: 50px;
+    }
+
+    @media (orientation: landscape) and (max-width: toEm(1440.98)) {
+      font-size: 3.5vw !important;
+    }
+
+    @media (orientation: landscape) {
+      width: 24vw;
+      max-width: toRem(347);
+    }
+
+    @media (orientation: landscape) and (max-width: toEm(1000.98)) and (max-height: toEm(480.98)) {
+      width: 20vw !important;
+      font-size: 2.6vw !important;
+    }
+
+    @media (orientation: portrait) {
+      // max-width: toRem(300);
+      width: 45vw;
+      font-size: 6vw;
+    }
+
+    @media (orientation: portrait) and (max-width:toEm($mobileSmall)) {
+      width: 53vw !important;
+      font-size: 8vw !important;
+    }
+
+    [data-fls-loaded] & {
+      opacity: 1;
+      scale: 1;
+      transition: scale 0.65s cubic-bezier(.52, 1.77, .49, .82) 0s, opacity .4s ease 0s;
+      animation: shake 1.5s linear 1s infinite;
+    }
+
+    
+    // @media (any-hover: hover) {
+    //   &:hover {
+    //     animation-play-state: paused;
+    //     scale: 1.2;
+    //     transition: scale .2s ease 0s;
+    //   }
+    // }
+
+    &:active {
+      animation-play-state: paused;
+      // scale: 1.2;
+    }
+
+    span {
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      width: max-content;
+      color: #fff;
+      transform: translate(-55%, -80%) skewX(-4deg) rotate(-4deg);
+      text-shadow: 0 0 17px #944704;
+
+    }
+  }
+
+  // .chips__btn-img
+  &__btn-img {
+    width: 100%;
+    height: auto;
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes shake {
+  0% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+
+  6.25% {
+    transform: rotate(10deg) translate3d(0, 0, 0);
+  }
+
+  12.5% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+
+  18.75% {
+    transform: rotate(-10deg) translate3d(0, 0, 0);
+  }
+
+  25% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+
+  31.25% {
+    transform: rotate(10deg) translate3d(0, 0, 0);
+  }
+
+  37.5% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+
+  43.75% {
+    transform: rotate(-10deg) translate3d(0, 0, 0);
+  }
+
+  // пауза в этом месте --------------
+  50% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+
+  100% {
+    transform: rotate(0deg) translate3d(0, 0, 0);
+  }
+}
+
+
+
+
 %txtShadow {
   position: relative;
   z-index: 2;
@@ -318,10 +471,11 @@
 .section-0 {
   // .section-0__container
   &__container {
-
+    position: relative;
     min-height: 100%;
     display: flex;
     justify-content: center;
+    overflow: hidden;
 
     @media (orientation: landscape) {
       gap: 40px;
