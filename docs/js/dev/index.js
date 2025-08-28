@@ -550,6 +550,34 @@ class FullPage {
       this.choiceOfDirection(yCoord);
     }
   }
+  // touchMove(e) {
+  // 	// Отримання секції, на якій спрацьовує подію
+  // 	const targetElement = e.target.closest(`.${this.options.activeClass}`);
+  // 	//===============================
+  // 	if (isMobile.iOS()) {
+  // 		let up = e.changedTouches[0].pageY > this.lastY;
+  // 		let down = !up;
+  // 		this.lastY = e.changedTouches[0].pageY;
+  // 		if (targetElement) {
+  // 			if ((up && this.allowUp) || (down && this.allowDown)) {
+  // 				e.stopPropagation();
+  // 			} else if (e.cancelable) {
+  // 				e.preventDefault();
+  // 			}
+  // 		}
+  // 	}
+  // 	//===============================
+  // 	// Перевірка на завершення анімації та наявність НЕ ПОДІЙНОГО блоку
+  // 	if (!this.clickOrTouch || e.target.closest(this.options.noEventSelector)) return
+  // 	// Отримання напряму руху
+  // 	let yCoord = this._yP - e.changedTouches[0].pageY;
+  // 	// Чи дозволено перехід? 
+  // 	this.checkScroll(yCoord, targetElement);
+  // 	// Перехід
+  // 	if (this.goScroll && Math.abs(yCoord) > 20) {
+  // 		this.choiceOfDirection(yCoord);
+  // 	}
+  // }
   //===============================
   // Подія відпускання від екрану тач/пера/курсора
   touchUp(e) {
@@ -1749,7 +1777,7 @@ const mm = window.matchMedia("(max-width: 51.31em)");
 function handleMatchMedia(e) {
   if (e.matches) {
     startOptionsCycle(
-      { iterations: 2, delay: 1300 }
+      { iterations: 1, delay: 900 }
       // настройка итераций и задержки, если нужно
     );
   } else {
@@ -1772,3 +1800,10 @@ htmlObserver.observe(document.documentElement, {
   attributeFilter: ["class"]
 });
 mm.addEventListener("change", handleMatchMedia);
+window.addEventListener("DOMContentLoaded", () => {
+  const list = document.querySelector(".section-4__list");
+  const items = list?.querySelectorAll(".section-4__item");
+  if (list && items?.length > 1) {
+    items[1].scrollIntoView({ behavior: "auto", inline: "center" });
+  }
+});

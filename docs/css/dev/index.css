@@ -745,9 +745,6 @@ body {
 .section-4__list {
   display: flex;
 }
-.section-4__body {
-  cursor: pointer;
-}
 .section-4__name {
   font-size: 1.875rem;
 }

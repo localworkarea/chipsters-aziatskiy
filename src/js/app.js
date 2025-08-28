@@ -187,7 +187,7 @@ addLoadedAttr();
         function handleMatchMedia(e) {
           if (e.matches) {
             startOptionsCycle(
-              { iterations: 2, delay: 1300 } // настройка итераций и задержки, если нужно
+              { iterations: 1, delay: 900 } // настройка итераций и задержки, если нужно
             ); 
           } else {
             stopOptionsCycle();
@@ -220,3 +220,12 @@ addLoadedAttr();
         
         mm.addEventListener('change', handleMatchMedia);
         
+
+
+        window.addEventListener('DOMContentLoaded', () => {
+  const list = document.querySelector('.section-4__list');
+  const items = list?.querySelectorAll('.section-4__item');
+  if (list && items?.length > 1) {
+    items[1].scrollIntoView({ behavior: 'auto', inline: 'center' });
+  }
+});
