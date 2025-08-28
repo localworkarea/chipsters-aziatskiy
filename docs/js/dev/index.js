@@ -67,108 +67,27 @@ function addLoadedAttr() {
     });
   }
 }
-let bodyLockStatus = true;
-let bodyUnlock = (delay = 500) => {
-  if (bodyLockStatus) {
-    const lockPaddingElements = document.querySelectorAll("[data-fls-lp]");
-    setTimeout(() => {
-      lockPaddingElements.forEach((lockPaddingElement) => {
-        lockPaddingElement.style.paddingRight = "";
-      });
-      document.body.style.paddingRight = "";
-      document.documentElement.removeAttribute("data-fls-scrolllock");
-    }, delay);
-    bodyLockStatus = false;
-    setTimeout(function() {
-      bodyLockStatus = true;
-    }, delay);
-  }
-};
-const gotoBlock = (targetBlock, noHeader = false, speed = 500, offsetTop = 0) => {
-  const targetBlockElement = document.querySelector(targetBlock);
-  if (targetBlockElement) {
-    let headerItem = "";
-    let headerItemHeight = 0;
-    if (noHeader) {
-      headerItem = "header.header";
-      const headerElement = document.querySelector(headerItem);
-      if (!headerElement.classList.contains("--header-scroll")) {
-        headerElement.style.cssText = `transition-duration: 0s;`;
-        headerElement.classList.add("--header-scroll");
-        headerItemHeight = headerElement.offsetHeight;
-        headerElement.classList.remove("--header-scroll");
-        setTimeout(() => {
-          headerElement.style.cssText = ``;
-        }, 0);
-      } else {
-        headerItemHeight = headerElement.offsetHeight;
-      }
-    }
-    if (document.documentElement.hasAttribute("data-fls-menu-open")) {
-      bodyUnlock();
-      document.documentElement.removeAttribute("data-fls-menu-open");
-    }
-    let targetBlockElementPosition = targetBlockElement.getBoundingClientRect().top + scrollY;
-    targetBlockElementPosition = headerItemHeight ? targetBlockElementPosition - headerItemHeight : targetBlockElementPosition;
-    targetBlockElementPosition = offsetTop ? targetBlockElementPosition - offsetTop : targetBlockElementPosition;
-    window.scrollTo({
-      top: targetBlockElementPosition,
-      behavior: "smooth"
-    });
-  }
-};
 class FullPage {
   constructor(element, options) {
     let config = {
-      //===============================
-      // Селектор, на якому не працює подія свайпа/колеса
       noEventSelector: "[data-fls-fullpage-noevent]",
-      //===============================
-      // Налаштування оболонки
-      // Клас при ініціалізації плагіна
       classInit: "--fullpage-init",
-      // Клас для врапера під час гортання
       wrapperAnimatedClass: "--fullpage-switching",
-      //===============================
-      // Налаштування секцій
-      // СЕЛЕКТОР для секцій
       selectorSection: "[data-fls-fullpage-section]",
-      // Клас для активної секції
       activeClass: "--fullpage-active-section",
-      // Клас для Попередньої секції
       previousClass: "--fullpage-previous-section",
-      // Клас для наступної секції
       nextClass: "--fullpage-next-section",
-      // id початково активного класу
       idActiveSection: 0,
-      //===============================
-      // Інші налаштування
-      // Свайп мишею
-      // touchSimulator: false,
-      //===============================
       swipeAngle: 45,
-      // Ефекти
-      // Ефекти: fade, cards, slider
       mode: element.dataset.flsFullpageEffect ? element.dataset.flsFullpageEffect : "slider",
-      //===============================
-      // Булети
-      // Активація буллетів
       bullets: element.hasAttribute("data-fls-fullpage-bullets") ? true : false,
-      // Клас оболонки буллетів
       bulletsClass: "--fullpage-bullets",
-      // Клас буллета
       bulletClass: "--fullpage-bullet",
-      // Клас активного буллета
       bulletActiveClass: "--fullpage-bullet-active",
-      //===============================
-      // Події
-      // Подія створення
       onInit: function() {
       },
-      // Подія перегортання секції
       onSwitching: function() {
       },
-      // Подія руйнування плагіна
       onDestroy: function() {
       }
     };
@@ -187,8 +106,6 @@ class FullPage {
       this.init();
     }
   }
-  //===============================
-  // Початкова ініціалізація
   init() {
     if (this.options.idActiveSection > this.sections.length - 1) return;
     this.setId();
@@ -211,8 +128,6 @@ class FullPage {
       }));
     }, 0);
   }
-  //===============================
-  // Видалити
   destroy() {
     this.removeEvents();
     this.removeClasses();
@@ -229,24 +144,18 @@ class FullPage {
       }
     }));
   }
-  //===============================
-  // Встановлення ID для секцій
   setId() {
     for (let index = 0; index < this.sections.length; index++) {
       const section = this.sections[index];
       section.setAttribute("data-fls-fullpage-id", index);
     }
   }
-  //===============================
-  // Видалення ID для секцій
   removeId() {
     for (let index = 0; index < this.sections.length; index++) {
       const section = this.sections[index];
       section.removeAttribute("data-fls-fullpage-id");
     }
   }
-  //===============================
-  // Функція встановлення класів для першої, активної та наступної секцій
   setClasses() {
     this.previousSectionId = this.activeSectionId - 1 >= 0 ? this.activeSectionId - 1 : false;
     this.nextSectionId = this.activeSectionId + 1 < this.sections.length ? this.activeSectionId + 1 : false;
@@ -270,8 +179,6 @@ class FullPage {
     }
     this.unlockByClick?.();
   }
-  //===============================
-  // Присвоєння класів із різними ефектами
   removeEffectsClasses() {
     switch (this.options.mode) {
       case "slider":
@@ -287,8 +194,6 @@ class FullPage {
         break;
     }
   }
-  //===============================
-  // Присвоєння класів із різними ефектами
   setEffectsClasses() {
     switch (this.options.mode) {
       case "slider":
@@ -304,10 +209,6 @@ class FullPage {
         break;
     }
   }
-  //===============================
-  // Блокування напрямків скролла
-  //===============================
-  // Функція встановлення стилів
   setStyle() {
     switch (this.options.mode) {
       case "slider":
@@ -321,7 +222,6 @@ class FullPage {
         break;
     }
   }
-  // slider-mode
   styleSlider() {
     for (let index = 0; index < this.sections.length; index++) {
       const section = this.sections[index];
@@ -334,7 +234,6 @@ class FullPage {
       }
     }
   }
-  // cards mode
   styleCards() {
     for (let index = 0; index < this.sections.length; index++) {
       const section = this.sections[index];
@@ -345,7 +244,6 @@ class FullPage {
       }
     }
   }
-  // fade style 
   styleFade() {
     for (let index = 0; index < this.sections.length; index++) {
       const section = this.sections[index];
@@ -358,8 +256,6 @@ class FullPage {
       }
     }
   }
-  //===============================
-  // Видалення стилів
   removeStyle() {
     for (let index = 0; index < this.sections.length; index++) {
       const section = this.sections[index];
@@ -368,8 +264,6 @@ class FullPage {
       section.style.transform = "";
     }
   }
-  //===============================
-  // Функція перевірки чи повністю було прокручено елемент
   checkScroll(yCoord, element) {
     this.goScroll = false;
     if (!this.stopEvent && element) {
@@ -383,13 +277,9 @@ class FullPage {
       }
     }
   }
-  //===============================
-  // Перевірка висоти 
   haveScroll(element) {
     return element.scrollHeight !== window.innerHeight;
   }
-  //===============================
-  // Видалення класів 
   removeClasses() {
     for (let index = 0; index < this.sections.length; index++) {
       const section = this.sections[index];
@@ -398,20 +288,14 @@ class FullPage {
       section.classList.remove(this.options.nextClass);
     }
   }
-  //===============================
-  // Збірник подій...
   events() {
     this.events = {
-      // Колесо миші
       wheel: this.wheel.bind(this),
-      // Свайп
       touchdown: this.touchDown.bind(this),
       touchup: this.touchUp.bind(this),
       touchmove: this.touchMove.bind(this),
       touchcancel: this.touchUp.bind(this),
-      // Кінець анімації
       transitionEnd: this.transitionend.bind(this),
-      // Клік для буллетів
       click: this.clickBullets.bind(this)
     };
     if (isMobile.iOS()) {
@@ -462,8 +346,6 @@ class FullPage {
       this.bulletsWrapper.removeEventListener("click", this.events.click);
     }
   }
-  //===============================
-  // Функція кліка по булетах
   clickBullets(e) {
     const bullet = e.target.closest(`.${this.options.bulletClass}`);
     if (bullet) {
@@ -484,8 +366,6 @@ class FullPage {
       }
     }
   }
-  //===============================
-  // Установка стилів для буллетів
   setActiveBullet(idButton) {
     if (!this.bulletsWrapper) return;
     const bullets = this.bulletsWrapper.children;
@@ -495,8 +375,6 @@ class FullPage {
       else bullet.classList.remove(this.options.bulletActiveClass);
     }
   }
-  //===============================
-  // Функція натискання тач/пера/курсора
   touchDown(e) {
     this._touchStartY = e.changedTouches[0].pageY;
     this._touchStartX = e.changedTouches[0].pageX;
@@ -521,8 +399,6 @@ class FullPage {
       }
     }
   }
-  //===============================
-  // Подія руху тач/пера/курсора
   touchMove(e) {
     const targetElement = e.target.closest(`.${this.options.activeClass}`);
     if (isMobile.iOS()) {
@@ -550,51 +426,17 @@ class FullPage {
       this.choiceOfDirection(yCoord);
     }
   }
-  // touchMove(e) {
-  // 	// Отримання секції, на якій спрацьовує подію
-  // 	const targetElement = e.target.closest(`.${this.options.activeClass}`);
-  // 	//===============================
-  // 	if (isMobile.iOS()) {
-  // 		let up = e.changedTouches[0].pageY > this.lastY;
-  // 		let down = !up;
-  // 		this.lastY = e.changedTouches[0].pageY;
-  // 		if (targetElement) {
-  // 			if ((up && this.allowUp) || (down && this.allowDown)) {
-  // 				e.stopPropagation();
-  // 			} else if (e.cancelable) {
-  // 				e.preventDefault();
-  // 			}
-  // 		}
-  // 	}
-  // 	//===============================
-  // 	// Перевірка на завершення анімації та наявність НЕ ПОДІЙНОГО блоку
-  // 	if (!this.clickOrTouch || e.target.closest(this.options.noEventSelector)) return
-  // 	// Отримання напряму руху
-  // 	let yCoord = this._yP - e.changedTouches[0].pageY;
-  // 	// Чи дозволено перехід? 
-  // 	this.checkScroll(yCoord, targetElement);
-  // 	// Перехід
-  // 	if (this.goScroll && Math.abs(yCoord) > 20) {
-  // 		this.choiceOfDirection(yCoord);
-  // 	}
-  // }
-  //===============================
-  // Подія відпускання від екрану тач/пера/курсора
   touchUp(e) {
     this._eventElement.removeEventListener("touchend", this.events.touchup);
     this._eventElement.removeEventListener("touchcancel", this.events.touchup);
     this._eventElement.removeEventListener("touchmove", this.events.touchmove);
     return this.clickOrTouch = false;
   }
-  //===============================
-  // Кінець спрацьовування переходу
   transitionend(e) {
     this.stopEvent = false;
     document.documentElement.classList.remove(this.options.wrapperAnimatedClass);
     this.wrapper.classList.remove(this.options.wrapperAnimatedClass);
   }
-  //===============================
-  // Подія прокручування колесом миші
   wheel(e) {
     if (e.target.closest(this.options.noEventSelector)) return;
     const yCoord = e.deltaY;
@@ -602,8 +444,6 @@ class FullPage {
     this.checkScroll(yCoord, targetElement);
     if (this.goScroll) this.choiceOfDirection(yCoord);
   }
-  //===============================
-  // Функція вибору напряму
   choiceOfDirection(direction) {
     const isLocked = this.activeSection.hasAttribute("data-fp-locked");
     if (direction > 0 && isLocked) return;
@@ -614,8 +454,6 @@ class FullPage {
     }
     this.switchingSection(this.activeSectionId, direction);
   }
-  //===============================
-  // Функція перемикання слайдів
   switchingSection(idSection = this.activeSectionId, direction) {
     if (!direction) {
       if (idSection < this.activeSectionId) {
@@ -657,8 +495,6 @@ class FullPage {
       }));
     }
   }
-  //===============================
-  // Встановлення булетів
   setBullets() {
     this.bulletsWrapper = document.querySelector(`.${this.options.bulletsClass}`);
     if (!this.bulletsWrapper) {
@@ -675,8 +511,6 @@ class FullPage {
       }
     }
   }
-  //===============================
-  // Z-INDEX
   setZIndex() {
     let zIndex = this.sections.length;
     for (let index = 0; index < this.sections.length; index++) {
@@ -695,190 +529,6 @@ class FullPage {
 if (document.querySelector("[data-fls-fullpage]")) {
   window.addEventListener("load", () => window.flsFullpage = new FullPage(document.querySelector("[data-fls-fullpage]")));
 }
-let formValidate = {
-  getErrors(form) {
-    let error = 0;
-    let formRequiredItems = form.querySelectorAll("[required]");
-    if (formRequiredItems.length) {
-      formRequiredItems.forEach((formRequiredItem) => {
-        if ((formRequiredItem.offsetParent !== null || formRequiredItem.tagName === "SELECT") && !formRequiredItem.disabled) {
-          error += this.validateInput(formRequiredItem);
-        }
-      });
-    }
-    return error;
-  },
-  validateInput(formRequiredItem) {
-    let error = 0;
-    if (formRequiredItem.type === "email") {
-      formRequiredItem.value = formRequiredItem.value.replace(" ", "");
-      if (this.emailTest(formRequiredItem)) {
-        this.addError(formRequiredItem);
-        this.removeSuccess(formRequiredItem);
-        error++;
-      } else {
-        this.removeError(formRequiredItem);
-        this.addSuccess(formRequiredItem);
-      }
-    } else if (formRequiredItem.type === "checkbox" && !formRequiredItem.checked) {
-      this.addError(formRequiredItem);
-      this.removeSuccess(formRequiredItem);
-      error++;
-    } else {
-      if (!formRequiredItem.value.trim()) {
-        this.addError(formRequiredItem);
-        this.removeSuccess(formRequiredItem);
-        error++;
-      } else {
-        this.removeError(formRequiredItem);
-        this.addSuccess(formRequiredItem);
-      }
-    }
-    return error;
-  },
-  addError(formRequiredItem) {
-    formRequiredItem.classList.add("--form-error");
-    formRequiredItem.parentElement.classList.add("--form-error");
-    let inputError = formRequiredItem.parentElement.querySelector("[data-fls-form-error]");
-    if (inputError) formRequiredItem.parentElement.removeChild(inputError);
-    if (formRequiredItem.dataset.flsFormErrtext) {
-      formRequiredItem.parentElement.insertAdjacentHTML("beforeend", `<div data-fls-form-error>${formRequiredItem.dataset.flsFormErrtext}</div>`);
-    }
-  },
-  removeError(formRequiredItem) {
-    formRequiredItem.classList.remove("--form-error");
-    formRequiredItem.parentElement.classList.remove("--form-error");
-    if (formRequiredItem.parentElement.querySelector("[data-fls-form-error]")) {
-      formRequiredItem.parentElement.removeChild(formRequiredItem.parentElement.querySelector("[data-fls-form-error]"));
-    }
-  },
-  addSuccess(formRequiredItem) {
-    formRequiredItem.classList.add("--form-success");
-    formRequiredItem.parentElement.classList.add("--form-success");
-  },
-  removeSuccess(formRequiredItem) {
-    formRequiredItem.classList.remove("--form-success");
-    formRequiredItem.parentElement.classList.remove("--form-success");
-  },
-  formClean(form) {
-    form.reset();
-    setTimeout(() => {
-      let inputs = form.querySelectorAll("input,textarea");
-      for (let index = 0; index < inputs.length; index++) {
-        const el = inputs[index];
-        el.parentElement.classList.remove("--form-focus");
-        el.classList.remove("--form-focus");
-        formValidate.removeError(el);
-      }
-      let checkboxes = form.querySelectorAll('input[type="checkbox"]');
-      if (checkboxes.length) {
-        checkboxes.forEach((checkbox) => {
-          checkbox.checked = false;
-        });
-      }
-      if (window["flsSelect"]) {
-        let selects = form.querySelectorAll("select[data-fls-select]");
-        if (selects.length) {
-          selects.forEach((select) => {
-            window["flsSelect"].selectBuild(select);
-          });
-        }
-      }
-    }, 0);
-  },
-  emailTest(formRequiredItem) {
-    return !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,8})+$/.test(formRequiredItem.value);
-  }
-};
-function formInit() {
-  function formSubmit() {
-    const forms = document.forms;
-    if (forms.length) {
-      for (const form of forms) {
-        !form.hasAttribute("data-fls-form-novalidate") ? form.setAttribute("novalidate", true) : null;
-        form.addEventListener("submit", function(e) {
-          const form2 = e.target;
-          formSubmitAction(form2, e);
-        });
-        form.addEventListener("reset", function(e) {
-          const form2 = e.target;
-          formValidate.formClean(form2);
-        });
-      }
-    }
-    async function formSubmitAction(form, e) {
-      const error = formValidate.getErrors(form);
-      if (error === 0) {
-        if (form.dataset.flsForm === "ajax") {
-          e.preventDefault();
-          const formAction = form.getAttribute("action") ? form.getAttribute("action").trim() : "#";
-          const formMethod = form.getAttribute("method") ? form.getAttribute("method").trim() : "GET";
-          const formData = new FormData(form);
-          form.classList.add("--sending");
-          const response = await fetch(formAction, {
-            method: formMethod,
-            body: formData
-          });
-          if (response.ok) {
-            let responseResult = await response.json();
-            form.classList.remove("--sending");
-            formSent(form, responseResult);
-          } else {
-            form.classList.remove("--sending");
-          }
-        } else if (form.dataset.flsForm === "dev") {
-          e.preventDefault();
-          formSent(form);
-        }
-      } else {
-        e.preventDefault();
-        if (form.querySelector(".--form-error") && form.hasAttribute("data-fls-form-gotoerr")) {
-          const formGoToErrorClass = form.dataset.flsFormGotoerr ? form.dataset.flsFormGotoerr : ".--form-error";
-          gotoBlock(formGoToErrorClass);
-        }
-      }
-    }
-    function formSent(form, responseResult = ``) {
-      document.dispatchEvent(new CustomEvent("formSent", {
-        detail: {
-          form
-        }
-      }));
-      setTimeout(() => {
-        if (window.flsPopup) {
-          const popup = form.dataset.flsFormPopup;
-          popup ? window.flsPopup.open(popup) : null;
-        }
-      }, 0);
-      formValidate.formClean(form);
-    }
-  }
-  function formFieldsInit() {
-    document.body.addEventListener("focusin", function(e) {
-      const targetElement = e.target;
-      if (targetElement.tagName === "INPUT" || targetElement.tagName === "TEXTAREA") {
-        if (!targetElement.hasAttribute("data-fls-form-nofocus")) {
-          targetElement.classList.add("--form-focus");
-          targetElement.parentElement.classList.add("--form-focus");
-        }
-        targetElement.hasAttribute("data-fls-form-validatenow") ? formValidate.removeError(targetElement) : null;
-      }
-    });
-    document.body.addEventListener("focusout", function(e) {
-      const targetElement = e.target;
-      if (targetElement.tagName === "INPUT" || targetElement.tagName === "TEXTAREA") {
-        if (!targetElement.hasAttribute("data-fls-form-nofocus")) {
-          targetElement.classList.remove("--form-focus");
-          targetElement.parentElement.classList.remove("--form-focus");
-        }
-        targetElement.hasAttribute("data-fls-form-validatenow") ? formValidate.validateInput(targetElement) : null;
-      }
-    });
-  }
-  formSubmit();
-  formFieldsInit();
-}
-document.querySelector("[data-fls-form]") ? window.addEventListener("load", formInit) : null;
 (function() {
   function append() {
     var length = arguments.length;
@@ -1346,16 +996,16 @@ function getPosition(node, isWord, settings, scrollPos) {
     };
   }
   var parent = node.offsetParent;
-  var _scrollPos = _slicedToArray(scrollPos, 2), scrollX = _scrollPos[0], scrollY2 = _scrollPos[1];
+  var _scrollPos = _slicedToArray(scrollPos, 2), scrollX = _scrollPos[0], scrollY = _scrollPos[1];
   var parentX = 0;
   var parentY = 0;
   if (parent && parent !== document.body) {
     var parentRect = parent.getBoundingClientRect();
     parentX = parentRect.x + scrollX;
-    parentY = parentRect.y + scrollY2;
+    parentY = parentRect.y + scrollY;
   }
   var _node$getBoundingClie = node.getBoundingClientRect(), width = _node$getBoundingClie.width, height = _node$getBoundingClie.height, x = _node$getBoundingClie.x, y = _node$getBoundingClie.y;
-  var top = y + scrollY2 - parentY;
+  var top = y + scrollY - parentY;
   var left = x + scrollX - parentX;
   return {
     width,
