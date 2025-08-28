@@ -32,6 +32,9 @@ class FullPage {
 			// Свайп мишею
 			// touchSimulator: false,
 			//===============================
+
+			swipeAngle: 45,
+
 			// Ефекти
 			// Ефекти: fade, cards, slider
 			mode: element.dataset.flsFullpageEffect ? element.dataset.flsFullpageEffect : 'slider',
@@ -465,7 +468,10 @@ clickBullets(e) {
 	// Функція натискання тач/пера/курсора
 	touchDown(e) {
 		// Змінна для свайпа
-		this._yP = e.changedTouches[0].pageY;
+		// this._yP = e.changedTouches[0].pageY;
+		this._touchStartY = e.changedTouches[0].pageY;
+		this._touchStartX = e.changedTouches[0].pageX;
+
 		this._eventElement = e.target.closest(`.${this.options.activeClass}`);
 		if (this._eventElement) {
 			// Вішаємо подію touchmove та touchup
@@ -495,9 +501,9 @@ clickBullets(e) {
 	//===============================
 	// Подія руху тач/пера/курсора
 	touchMove(e) {
-		// Отримання секції, на якій спрацьовує подію
 		const targetElement = e.target.closest(`.${this.options.activeClass}`);
-		//===============================
+	
+		// iOS scroll fix (оставляем как есть)
 		if (isMobile.iOS()) {
 			let up = e.changedTouches[0].pageY > this.lastY;
 			let down = !up;
@@ -510,18 +516,29 @@ clickBullets(e) {
 				}
 			}
 		}
-		//===============================
-		// Перевірка на завершення анімації та наявність НЕ ПОДІЙНОГО блоку
-		if (!this.clickOrTouch || e.target.closest(this.options.noEventSelector)) return
-		// Отримання напряму руху
-		let yCoord = this._yP - e.changedTouches[0].pageY;
-		// Чи дозволено перехід? 
+	
+		// Проверка угла свайпа
+		const deltaX = e.changedTouches[0].pageX - this._touchStartX;
+		const deltaY = e.changedTouches[0].pageY - this._touchStartY;
+		const angle = Math.abs(Math.atan2(deltaY, deltaX) * 180 / Math.PI);
+	
+		if (angle < (90 - this.options.swipeAngle)) {
+			// Свайп ближе к горизонтальному — отменяем
+			return;
+		}
+	
+		if (!this.clickOrTouch || e.target.closest(this.options.noEventSelector)) return;
+	
+		let yCoord = this._touchStartY - e.changedTouches[0].pageY;
+	
 		this.checkScroll(yCoord, targetElement);
-		// Перехід
+	
 		if (this.goScroll && Math.abs(yCoord) > 20) {
 			this.choiceOfDirection(yCoord);
 		}
 	}
+
+
 	//===============================
 	// Подія відпускання від екрану тач/пера/курсора
 	touchUp(e) {

@@ -146,6 +146,7 @@ class FullPage {
       // Свайп мишею
       // touchSimulator: false,
       //===============================
+      swipeAngle: 45,
       // Ефекти
       // Ефекти: fade, cards, slider
       mode: element.dataset.flsFullpageEffect ? element.dataset.flsFullpageEffect : "slider",
@@ -497,7 +498,8 @@ class FullPage {
   //===============================
   // Функція натискання тач/пера/курсора
   touchDown(e) {
-    this._yP = e.changedTouches[0].pageY;
+    this._touchStartY = e.changedTouches[0].pageY;
+    this._touchStartX = e.changedTouches[0].pageX;
     this._eventElement = e.target.closest(`.${this.options.activeClass}`);
     if (this._eventElement) {
       this._eventElement.addEventListener("touchend", this.events.touchup);
@@ -535,8 +537,14 @@ class FullPage {
         }
       }
     }
+    const deltaX = e.changedTouches[0].pageX - this._touchStartX;
+    const deltaY = e.changedTouches[0].pageY - this._touchStartY;
+    const angle = Math.abs(Math.atan2(deltaY, deltaX) * 180 / Math.PI);
+    if (angle < 90 - this.options.swipeAngle) {
+      return;
+    }
     if (!this.clickOrTouch || e.target.closest(this.options.noEventSelector)) return;
-    let yCoord = this._yP - e.changedTouches[0].pageY;
+    let yCoord = this._touchStartY - e.changedTouches[0].pageY;
     this.checkScroll(yCoord, targetElement);
     if (this.goScroll && Math.abs(yCoord) > 20) {
       this.choiceOfDirection(yCoord);
