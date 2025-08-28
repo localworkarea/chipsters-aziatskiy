@@ -33,6 +33,22 @@
         "start": 1756220126405,
         "end": 1756223496239,
         "type": "build"
+      },
+      {
+        "date": "28.08.2025",
+        "start": 1756363997593,
+        "end": 1756364960064
+      },
+      {
+        "date": "28.08.2025",
+        "start": 1756364969527,
+        "end": 1756365092588
+      },
+      {
+        "date": "28.08.2025",
+        "start": 1756365110883,
+        "end": 1756382897303,
+        "type": "build"
       }
     ],
     "files": [
@@ -46,7 +62,12 @@
       "fullpage.scss",
       "extends.scss",
       "bg-main.jpg",
-      "app.js"
+      "app.js",
+      "videobutton.html",
+      "videobutton.js",
+      "videobutton.scss",
+      "fullpage.js",
+      "mytest.html"
     ]
   }
 }

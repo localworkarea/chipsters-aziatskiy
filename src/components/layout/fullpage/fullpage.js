@@ -188,6 +188,9 @@ class FullPage {
 		} else {
 			this.nextSection = false;
 		}
+
+		this.unlockByClick?.();
+
 	}
 	//===============================
 	// Присвоєння класів із різними ефектами
@@ -366,6 +369,38 @@ class FullPage {
 		}
 		this.setEvents();
 	}
+
+	// data-fp-locked == разблокируем свайп на секции с атрибутом data-fp-locked кликом по элементу data-fp-unlock-index
+unlockByClick() {
+	const unlockables = this.activeSection.querySelectorAll('[data-fp-unlock-index]');
+	if (unlockables.length) {
+		unlockables.forEach((el) => {
+			el.addEventListener('click', () => {
+				const index = el.getAttribute('data-fp-unlock-index');
+				this.activeSection.removeAttribute('data-fp-locked');
+
+				// Удаляем все предыдущие классы _target-el--N
+				document.documentElement.classList.forEach(className => {
+					if (className.startsWith('_target-el--')) {
+						document.documentElement.classList.remove(className);
+					}
+				});
+				// Добавляем актуальный класс
+				document.documentElement.classList.add(`_target-el--${index}`);
+
+				// Принудительно идем только на следующую секцию
+				const nextSectionId = this.activeSectionId + 1;
+				if (nextSectionId < this.sections.length) {
+					setTimeout(() => {
+						this.switchingSection(nextSectionId, 100);
+					}, 400);
+				}
+			});
+		});
+	}
+}
+
+
 	setEvents() {
 		// Подія колеса миші
 		this.wrapper.addEventListener('wheel', this.events.wheel);
@@ -388,20 +423,31 @@ class FullPage {
 	}
 	//===============================
 	// Функція кліка по булетах
-	clickBullets(e) {
-		// Натиснутий буллет
-		const bullet = e.target.closest(`.${this.options.bulletClass}`);
-		if (bullet) {
-			// Масив усіх буллетів
-			const arrayChildren = Array.from(this.bulletsWrapper.children);
+clickBullets(e) {
+	const bullet = e.target.closest(`.${this.options.bulletClass}`);
+	if (bullet) {
+		const arrayChildren = Array.from(this.bulletsWrapper.children);
+		const idClickBullet = arrayChildren.indexOf(bullet);
 
-			// id Натиснутого буллета
-			const idClickBullet = arrayChildren.indexOf(bullet)
+		const isGoingForward = idClickBullet > this.activeSectionId;
+		let canGo = true;
 
-			// Перемикання секції
-			this.switchingSection(idClickBullet)
+		// Проверка блокировки на секциях между текущей и целевой
+		if (isGoingForward) {
+			for (let i = this.activeSectionId; i < idClickBullet; i++) {
+				if (this.sections[i].hasAttribute('data-fp-locked')) {
+					canGo = false;
+					break;
+				}
+			}
+		}
+
+		if (canGo) {
+			this.switchingSection(idClickBullet);
 		}
 	}
+}
+
 	//===============================
 	// Установка стилів для буллетів
 	setActiveBullet(idButton) {
@@ -510,18 +556,25 @@ class FullPage {
 	}
 	//===============================
 	// Функція вибору напряму
-	choiceOfDirection(direction) {
-		// Встановлення потрібних id
-		if (direction > 0 && this.nextSection !== false) {
-			this.activeSectionId = (this.activeSectionId + 1) < this.sections.length ?
-				++this.activeSectionId : this.activeSectionId;
-		} else if (direction < 0 && this.previousSection !== false) {
-			this.activeSectionId = (this.activeSectionId - 1) >= 0 ?
-				--this.activeSectionId : this.activeSectionId;
-		}
-		// Зміна слайдів
-		this.switchingSection(this.activeSectionId, direction);
+choiceOfDirection(direction) {
+	const isLocked = this.activeSection.hasAttribute('data-fp-locked');
+
+	// Блокируем только движение вперёд с активной заблокированной секции
+	if (direction > 0 && isLocked) return;
+
+	// Обновляем индекс активной секции
+	if (direction > 0 && this.nextSection !== false) {
+		this.activeSectionId = (this.activeSectionId + 1) < this.sections.length ?
+			++this.activeSectionId : this.activeSectionId;
+	} else if (direction < 0 && this.previousSection !== false) {
+		this.activeSectionId = (this.activeSectionId - 1) >= 0 ?
+			--this.activeSectionId : this.activeSectionId;
 	}
+
+	// Зміна слайдів
+	this.switchingSection(this.activeSectionId, direction);
+}
+
 	//===============================
 	// Функція перемикання слайдів
 	switchingSection(idSection = this.activeSectionId, direction) {
@@ -587,6 +640,7 @@ class FullPage {
 	//===============================
 	// Встановлення булетів
 	setBullets() {
+		
 		// Пошук оболонки буллетів
 		this.bulletsWrapper = document.querySelector(`.${this.options.bulletsClass}`);
 

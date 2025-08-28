@@ -1,6 +1,8 @@
 import { addTouchAttr, addLoadedAttr, isMobile, FLS } from "@js/common/functions.js"
 import SplitType from 'split-type'
 
+addLoadedAttr();
+
    const splitTextLines = document.querySelectorAll('.split-lines');
         const splitTextWords = document.querySelectorAll('.split-words');
         const splitTextChars = document.querySelectorAll('.split-chars');

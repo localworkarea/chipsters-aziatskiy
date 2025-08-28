@@ -27,6 +27,24 @@
     fetch(link.href, fetchOpts);
   }
 })();
+const videoYoutubeButtons = document.querySelectorAll(".video-youtube__button");
+videoYoutubeButtons.forEach((button) => {
+  button.addEventListener("click", function() {
+    const youTubeCode = this.getAttribute("data-youtube");
+    let urlVideo = `https://www.youtube.com/embed/${youTubeCode}?rel=0&showinfo=0`;
+    const iframe = document.createElement("iframe");
+    iframe.setAttribute("allowfullscreen", "");
+    {
+      urlVideo += "&autoplay=1";
+      iframe.setAttribute("allow", "autoplay; encrypted-media");
+    }
+    iframe.setAttribute("src", urlVideo);
+    const body = this.closest(".video-youtube__body");
+    body.innerHTML = "";
+    body.appendChild(iframe);
+    body.classList.add("video-added");
+  });
+});
 const isMobile = { Android: function() {
   return navigator.userAgent.match(/Android/i);
 }, BlackBerry: function() {
@@ -40,6 +58,15 @@ const isMobile = { Android: function() {
 }, any: function() {
   return isMobile.Android() || isMobile.BlackBerry() || isMobile.iOS() || isMobile.Opera() || isMobile.Windows();
 } };
+function addLoadedAttr() {
+  if (!document.documentElement.hasAttribute("data-fls-preloader-loading")) {
+    window.addEventListener("load", function() {
+      setTimeout(function() {
+        document.documentElement.setAttribute("data-fls-loaded", "");
+      }, 0);
+    });
+  }
+}
 let bodyLockStatus = true;
 let bodyUnlock = (delay = 500) => {
   if (bodyLockStatus) {
@@ -240,6 +267,7 @@ class FullPage {
     } else {
       this.nextSection = false;
     }
+    this.unlockByClick?.();
   }
   //===============================
   // Присвоєння класів із різними ефектами
@@ -392,6 +420,30 @@ class FullPage {
     }
     this.setEvents();
   }
+  // data-fp-locked == разблокируем свайп на секции с атрибутом data-fp-locked кликом по элементу data-fp-unlock-index
+  unlockByClick() {
+    const unlockables = this.activeSection.querySelectorAll("[data-fp-unlock-index]");
+    if (unlockables.length) {
+      unlockables.forEach((el) => {
+        el.addEventListener("click", () => {
+          const index = el.getAttribute("data-fp-unlock-index");
+          this.activeSection.removeAttribute("data-fp-locked");
+          document.documentElement.classList.forEach((className) => {
+            if (className.startsWith("_target-el--")) {
+              document.documentElement.classList.remove(className);
+            }
+          });
+          document.documentElement.classList.add(`_target-el--${index}`);
+          const nextSectionId = this.activeSectionId + 1;
+          if (nextSectionId < this.sections.length) {
+            setTimeout(() => {
+              this.switchingSection(nextSectionId, 100);
+            }, 400);
+          }
+        });
+      });
+    }
+  }
   setEvents() {
     this.wrapper.addEventListener("wheel", this.events.wheel);
     this.wrapper.addEventListener("touchstart", this.events.touchdown);
@@ -416,7 +468,19 @@ class FullPage {
     if (bullet) {
       const arrayChildren = Array.from(this.bulletsWrapper.children);
       const idClickBullet = arrayChildren.indexOf(bullet);
-      this.switchingSection(idClickBullet);
+      const isGoingForward = idClickBullet > this.activeSectionId;
+      let canGo = true;
+      if (isGoingForward) {
+        for (let i = this.activeSectionId; i < idClickBullet; i++) {
+          if (this.sections[i].hasAttribute("data-fp-locked")) {
+            canGo = false;
+            break;
+          }
+        }
+      }
+      if (canGo) {
+        this.switchingSection(idClickBullet);
+      }
     }
   }
   //===============================
@@ -505,6 +569,8 @@ class FullPage {
   //===============================
   // Функція вибору напряму
   choiceOfDirection(direction) {
+    const isLocked = this.activeSection.hasAttribute("data-fp-locked");
+    if (direction > 0 && isLocked) return;
     if (direction > 0 && this.nextSection !== false) {
       this.activeSectionId = this.activeSectionId + 1 < this.sections.length ? ++this.activeSectionId : this.activeSectionId;
     } else if (direction < 0 && this.previousSection !== false) {
@@ -1551,6 +1617,7 @@ var SplitType = /* @__PURE__ */ (function() {
   }]);
   return SplitType2;
 })();
+addLoadedAttr();
 const splitTextLines = document.querySelectorAll(".split-lines");
 const splitTextWords = document.querySelectorAll(".split-words");
 const splitTextChars = document.querySelectorAll(".split-chars");
