@@ -185,23 +185,25 @@ section {
 .chips {
   position: absolute;
   z-index: 10;
-  left: 45%;
-  bottom: 3%;
+  left: 40%;
+  bottom: 2%;
 
-  @media (max-width: toEm(820.98)){
-      display: none;
+  @media (orientation: landscape) {}
+  
+  @media (orientation: portrait) {
+    left: 50%;
+    transform: translate(-50%,0);
   }
 
-   @media (any-hover: hover) {
-      &:hover {
-        .chips__btn {
-          animation-play-state: paused;
-
-        }
-        scale: 1.2;
-        transition: scale .2s ease 0s;
-      }
-    }
+  @media (any-hover: hover) {
+     &:hover {
+       .chips__btn {
+         animation-play-state: paused;
+       }
+       scale: 1.2;
+       transition: scale .2s ease 0s;
+     }
+  }
 
 
   // .chips__btn
@@ -217,11 +219,11 @@ section {
     }
 
     @media (orientation: landscape) and (max-width: toEm(1440.98)) {
-      font-size: 3.5vw !important;
+      font-size: 3vw !important;
     }
 
     @media (orientation: landscape) {
-      width: 24vw;
+      width: 20vw;
       max-width: toRem(347);
     }
 
@@ -232,13 +234,13 @@ section {
 
     @media (orientation: portrait) {
       // max-width: toRem(300);
-      width: 45vw;
-      font-size: 6vw;
+      width: 38vw;
+      font-size: 5vw;
     }
 
-    @media (orientation: portrait) and (max-width:toEm($mobileSmall)) {
-      width: 53vw !important;
-      font-size: 8vw !important;
+    @media (max-width:toEm($mobileSmall)) {
+      width: 57vw !important;
+      font-size: 8.3vw !important;
     }
 
     [data-fls-loaded] & {
@@ -285,44 +287,44 @@ section {
 
 @keyframes shake {
   0% {
-    transform: rotate(0deg) translate3d(0, 0, 0);
+    transform: rotate(0deg) ;
   }
 
   6.25% {
-    transform: rotate(10deg) translate3d(0, 0, 0);
+    transform: rotate(10deg) ;
   }
 
   12.5% {
-    transform: rotate(0deg) translate3d(0, 0, 0);
+    transform: rotate(0deg) ;
   }
 
   18.75% {
-    transform: rotate(-10deg) translate3d(0, 0, 0);
+    transform: rotate(-10deg) ;
   }
 
   25% {
-    transform: rotate(0deg) translate3d(0, 0, 0);
+    transform: rotate(0deg) ;
   }
 
   31.25% {
-    transform: rotate(10deg) translate3d(0, 0, 0);
+    transform: rotate(10deg) ;
   }
 
   37.5% {
-    transform: rotate(0deg) translate3d(0, 0, 0);
+    transform: rotate(0deg) ;
   }
 
   43.75% {
-    transform: rotate(-10deg) translate3d(0, 0, 0);
+    transform: rotate(-10deg) ;
   }
 
   // пауза в этом месте --------------
   50% {
-    transform: rotate(0deg) translate3d(0, 0, 0);
+    transform: rotate(0deg) ;
   }
 
   100% {
-    transform: rotate(0deg) translate3d(0, 0, 0);
+    transform: rotate(0deg) ;
   }
 }
 
@@ -487,9 +489,9 @@ section {
       position: relative;
     }
 
-    @media (max-width:toEm($mobileSmall)) {
-      padding-top: 24vh;
-    }
+    // @media (max-width:toEm($mobileSmall)) {
+      // padding-top: 24vh;
+    // }
   }
 
   // .section-0__body
@@ -499,20 +501,20 @@ section {
     @media (orientation: landscape) {}
 
     @media (orientation: portrait) {
-      position: absolute;
+      // position: absolute;
+      // top: 0;
       width: 100%;
-
-      top: 0;
       padding-top: 160px;
-      padding-bottom: 13vw;
-      min-height: inherit;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
+
+      // padding-bottom: 13vw;
+      // min-height: inherit;
+      // display: flex;
+      // flex-direction: column;
+      // justify-content: space-between;
     }
 
     @media (max-width:toEm($mobileSmall)) {
-      padding-top: 14vh !important;
+      padding-top: 110px !important;
     }
   }
 
@@ -547,6 +549,8 @@ section {
 
     @media (orientation: portrait) {
       align-self: center;
+      position: relative;
+      margin-top: -30px;
     }
 
     img {
@@ -559,7 +563,7 @@ section {
       }
 
       @media (orientation: portrait) {
-        height: 70vh;
+        height: 55vh;
       }
 
       @media (max-width:toEm($mobileSmall)) {
@@ -940,26 +944,28 @@ section {
   }
 
   // .section-2__body
-  &__body {}
-
-  // .section-2__title
-  &__title {
-    @extend %titleSection;
-    max-width: max-content;
-
-    @media (min-width:toEm(820.98)) {
-      margin-left: auto;
-      margin-right: 40px;
-    }
-
-    @media (max-width: toEm(820.98)) {
-      margin-inline: auto;
-    }
-
-    @media (max-width:toEm($mobileSmall)) {
-      margin-bottom: 40px;
-    }
+  &__body {
+    align-self: center;
   }
+
+  // // .section-2__title
+  // &__title {
+  //   @extend %titleSection;
+  //   max-width: max-content;
+
+  //   @media (min-width:toEm(820.98)) {
+  //     margin-left: auto;
+  //     margin-right: 40px;
+  //   }
+
+  //   @media (max-width: toEm(820.98)) {
+  //     margin-inline: auto;
+  //   }
+
+  //   @media (max-width:toEm($mobileSmall)) {
+  //     margin-bottom: 40px;
+  //   }
+  // }
 
   // .section-2__items
   &__items {}
