@@ -109,12 +109,13 @@ section {
       background-image: url("@img/bg/sakura-mb.png");
     }
     @media (max-width:toEm($mobileSmall)){
-       display: none;; 
+       display: none;
     }
   }
 
   // .bg__chips
   &__chips {
+     pointer-events: none;
     @extend %absolute;
     @extend %bgTransition;
     z-index: 2;
@@ -1308,7 +1309,14 @@ section {
   }
   // .section-4__container
   &__container {}
-
+  &__slider {
+    @media (max-width:toEm($mobileSmall)){
+      overflow: visible;
+      position: relative;
+      max-width: 80%;
+      margin-inline: auto;
+    }
+  }
   // .section-4__list
   &__list {
     display: flex;
@@ -1328,15 +1336,24 @@ section {
       margin-bottom: 60px;
     }
     @media (max-width: toEm($mobileSmall)) {
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-snap-type: x mandatory;
-      padding-left: 30px;
-      padding-right: 30px;
+      // overflow-x: auto;
+      // overflow-y: hidden;
+      // // scroll-snap-type: x proximity;
+      // scroll-snap-type: x mandatory;
+
+      // scroll-behavior: smooth;
+      // // touch-action: pan-x;
+
       padding-block: 30px;
-      margin-inline: -15px;
+      // padding-left: 30px;
+      // padding-right: 30px;
+      // margin-inline: -15px;
       
       margin-bottom: 10px;
+
+
+     will-change: transform;
+
 
       gap: 0px;
 
@@ -1353,18 +1370,15 @@ section {
 
   // .section-4__item
   &__item {
-    &.item-section-4--1 {}
-    
-    &.item-section-4--2 {}
-    
-    &.item-section-4--3 {}
     @media (max-width:toEm($mobileSmall)){
       //  width: calc(100vw - 40px); 
-        flex: 0 0 95%;
-        scroll-snap-align: center;
-    }
-    @media (max-width: toEm($mobileXS)){
-      flex: 0 0 70%;
+        // flex: 0 0 90%;
+        flex: 0 0 100%;
+        // // width: 100%;
+          max-width: 100%;
+      }
+      @media (max-width: toEm($mobileXS)){
+      // flex: 0 0 70%;
     }
   }
   
@@ -1393,6 +1407,7 @@ section {
   &__name {
     @extend %nameItem;
     font-size: 30px;
+    pointer-events: none;
   }
 
   // .section-4__social
