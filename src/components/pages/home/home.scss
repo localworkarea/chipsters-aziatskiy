@@ -68,11 +68,13 @@ section {
   &__sakura {
     @extend %absolute;
     @extend %bgTransition;
-    z-index: 1;
     // background: #000;
     @extend %bgImage;
-    background-position-x: 50%;
-    background-position-y: 70%;
+    
+    @media (min-width:toEm($mobileSmall)){
+      z-index: 1;
+      background-position-x: 50%;
+      background-position-y: 70%;
     
     opacity: 0;
     [data-fls-loaded] & {
@@ -96,6 +98,8 @@ section {
       background-position-y: 20%;
       transition-delay: 0s;
     }
+        
+    }
 
     @media (orientation: landscape) {
       background-image: url("@img/bg/sakura.png");
@@ -103,6 +107,9 @@ section {
 
     @media (orientation: portrait) {
       background-image: url("@img/bg/sakura-mb.png");
+    }
+    @media (max-width:toEm($mobileSmall)){
+       display: none;; 
     }
   }
 
@@ -159,6 +166,9 @@ section {
       top: 50%;
       right: 0%;
       transform: translate(64%, -16%) rotate(-30deg) scaleY(-1);
+      @media (max-width:toEm($mobileSmall)){
+         display: none; 
+      }
     }
 
     &.item-chips--4 {
