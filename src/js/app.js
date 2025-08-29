@@ -284,7 +284,6 @@ initTouchEvents() {
 		this.currentX = this.startX;
 		this.isDragging = true;
 
-		// Убираем transition для плавного "перетаскивания"
 		this.list.style.transition = "none";
 	};
 
@@ -301,18 +300,15 @@ initTouchEvents() {
 		if (!this.isDragging) return;
 		this.isDragging = false;
 
-		// Вернём transition
 		this.list.style.transition = "transform 0.45s ease";
 
-		// Вычислим ближайший слайд (даже если свайп был короткий)
 		const movedSlides = this.deltaX / this.slideWidth;
 		const direction = movedSlides > 0 ? -1 : 1;
 
-		// Сдвигаем если хоть немного прошли в сторону
 		if (Math.abs(movedSlides) > 0.05) {
 			this.goTo(this.currentIndex + direction);
 		} else {
-			this.setPosition(); // вернёмся обратно
+			this.setPosition();
 		}
 
 		this.deltaX = 0;
@@ -366,8 +362,6 @@ function handleSliderMatch(e) {
 	}
 }
 
-// Первичная инициализация
 handleSliderMatch(mq);
 
-// Отслеживание изменений
 mq.addEventListener("change", handleSliderMatch);
